@@ -1,0 +1,13 @@
+https://sange.fi/esoteric/brainfuck/impl/interp/i.html
+
+
+>	increment pointer
+<	decrement pointer
++	increment value at pointer
+-	decrement value at pointer
+[	begin loop (continues while value at pointer is non-zero)
+]	end loop
+,	read one character from input into value at pointer
+.	print value at pointer to output as a character
+#	display debugging info (in debug mode) 
+        Any other characters are ignored.
