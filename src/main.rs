@@ -16,7 +16,9 @@ mod data {
 fn main() {
         println!("Code me daddy!");
 
-        let result = Interpretor::start(data::ENTRY_CODE.as_bytes().to_vec(), data::USER_INPUTS.as_bytes().to_vec());
+        let mut interpreter = Interpretor::new(data::ENTRY_CODE.as_bytes().to_vec(), data::USER_INPUTS.as_bytes().to_vec());
+
+        let result = interpreter.start();
 
         println!("{:?}", result);
 }
