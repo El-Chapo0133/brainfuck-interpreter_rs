@@ -10,6 +10,7 @@ pub trait PointersIndex {
         fn decrement_value(&mut self) -> Result<(), &'static str>;
         fn set_value(&mut self, value: u8) -> Result<(), &'static str>;
         fn read_value(&self) -> Option<u8>;
+        
         fn get_values_cloned(&self) -> Vec<u8>;
 
         fn adjust_values_forward(&mut self) -> Result<(), &'static str>;
