@@ -10,8 +10,8 @@ pub trait PointersIndex {
         fn decrement_value(&mut self) -> Result<(), &'static str>;
         fn set_value(&mut self, value: u8) -> Result<(), &'static str>;
         fn read_value(&self) -> Option<u8>;
-
-        fn read_whole_values(&self) -> Vec<u8>;
+        
+        fn get_values_cloned(&self) -> Vec<u8>;
 
         fn adjust_values_forward(&mut self) -> Result<(), &'static str>;
         fn adjust_values_backward(&mut self) -> Result<(), &'static str>;
@@ -29,7 +29,7 @@ impl PointersIndex for Pointers {
         fn new() -> Pointers {
                 Pointers { values: vec![0u8], index: 0 }
         }
-        fn read_whole_values(&self) -> Vec<u8> {
+        fn get_values_cloned(&self) -> Vec<u8> {
                 self.values.clone()
         }
 
