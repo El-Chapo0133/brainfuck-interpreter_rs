@@ -14,11 +14,12 @@ mod commands {
 
 pub trait BFInterpretor {
         fn new(code: Vec<u8>, user_inputs: Vec<u8>) -> Interpretor;
-        fn start(&mut self) -> Vec<u8>;
+        fn start(&mut self) -> Result<Vec<u8>, &'static str>;
 
         fn read_next_user_input(&mut self) -> u8;
         fn discover_end_of_code(&self) -> usize; // should be up to about 30000
         fn discover_end_of_loop(&self, start_of_loop_index: usize) -> Result<usize, &'static str>;
+        fn check_code_loops(&self) -> bool;
 }
 
 pub struct Interpretor {
@@ -32,7 +33,11 @@ impl BFInterpretor for Interpretor {
         fn new(code: Vec<u8>, user_inputs: Vec<u8>) -> Interpretor {
                 Interpretor { code, user_inputs: user_inputs.into_iter().rev().collect::<Vec<u8>>() }
         }
-        fn start(&mut self) -> Vec<u8> {
+        fn start(&mut self) -> Result<Vec<u8>, &'static str> {
+                if !self.check_code_loops() {
+                        return Err("Code contains invalids or unclosed loops")
+                }
+
                 let mut pointers = Pointers::new();
                 let end_of_code = self.discover_end_of_code();
                 let mut code_index: usize = 0;
@@ -43,7 +48,7 @@ impl BFInterpretor for Interpretor {
                         
                 }
 
-                Vec::new()
+                Ok(pointers.get_values_cloned())
         }
 
         fn read_next_user_input(&mut self) -> u8 {
@@ -76,5 +81,19 @@ impl BFInterpretor for Interpretor {
                 }
 
                 Err("Could not find the end of loop")
+        }
+        fn check_code_loops(&self) -> bool {
+                let mut loop_stack = 0;
+
+                for index in 0..self.code.len() {
+                        if self.code[index] == *commands::BEGIN_LOOP {
+                                loop_stack += 1;
+                        }
+                        else if self.code[index] == *commands::END_LOOP {
+                                loop_stack -= 1;
+                        }
+                }
+
+                loop_stack == 0
         }
 }
