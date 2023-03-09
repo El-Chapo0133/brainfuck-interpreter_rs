@@ -1,6 +1,6 @@
 mod loop_hash_map;
-use crate::pointers::{Pointers, PointersIndex};
 
+use crate::pointers::{Pointers, PointersIndex};
 use self::loop_hash_map::{LoopHashMap, BFLoopHashMap};
 
 mod commands {
@@ -33,13 +33,15 @@ pub struct Interpretor {
 
 impl BFInterpretor for Interpretor {
         fn new(code: Vec<u8>, user_inputs: Vec<u8>) -> Interpretor {
+                // reverse the user_inputs to pop() then when needed, like a stack
+                // avoid using pop_front
                 Interpretor { code, user_inputs: user_inputs.into_iter().rev().collect::<Vec<u8>>() }
         }
         fn start(&mut self) -> Result<Vec<u8>, &'static str> {
                 if !self.check_code_loops() {
                         return Err("Code contains invalids or unclosed loops")
                 }
-                let mut result = String::new();
+                let mut result = Vec::<u8>::new();
 
                 let mut pointers = Pointers::new();
                 let end_of_code = self.discover_end_of_code();
@@ -50,7 +52,6 @@ impl BFInterpretor for Interpretor {
                 let mut loop_hash_map = LoopHashMap::new();
                 
                 while code_index < end_of_code {
-                        println!("code_index: {}", code_index);
                         match &self.code[code_index] {
                                 commands::INCREMENT => {
                                         match pointers.increment_value() {
@@ -90,7 +91,10 @@ impl BFInterpretor for Interpretor {
                                 },
                                 commands::PRINT_VALUE => {
                                         match pointers.read_value() {
-                                                Some(value) => result.push(value as char),
+                                                Some(value) => {
+                                                        code_index += 1;
+                                                        result.push(value)
+                                                },
                                                 None => {
                                                         code_index += 1;
                                                         continue
@@ -132,11 +136,11 @@ impl BFInterpretor for Interpretor {
                                 commands::END_LOOP => {
                                         if let Some(val) = pointers.read_value() {
                                                 if val == 0 {
+                                                        loop_layer -= 1;
                                                         code_index += 1;
                                                         continue;
                                                 }
                                         }
-
 
                                         match loop_hash_map.get_start_index(code_index) {
                                                 Some(val) => code_index = val + 1,
@@ -146,8 +150,6 @@ impl BFInterpretor for Interpretor {
                                                 }
                                         }
 
-                                        loop_layer -= 1;
-                                        code_index += 1;
                                         continue;
 
                                 },
@@ -159,17 +161,15 @@ impl BFInterpretor for Interpretor {
                 }
 
                 if loop_layer == 0 {
-                        println!("Code executed with exit code 0");
+                        // this should never happend lol
+                        return Err("Final loop_layer was not 0, there is some unclosed loops");
                 }
 
-                Ok(pointers.get_values_cloned())
+                println!("Code executed with exit code 0");
+                Ok(result)
         }
 
         fn read_next_user_input(&mut self) -> Option<u8> {
-                // match self.user_inputs.pop() {
-                //         Some(value) => value,
-                //         None => 0,
-                // }
                 self.user_inputs.pop()
         }
         fn discover_end_of_code(&self) -> usize {
