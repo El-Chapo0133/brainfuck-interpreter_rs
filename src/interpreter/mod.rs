@@ -117,6 +117,19 @@ impl BFInterpretor for Interpretor {
                                         }
                                 }
                                 commands::BEGIN_LOOP => {
+                                        if let Some(val) = pointers.read_value() {
+                                                if val == 0 {
+                                                        match self.discover_end_of_loop(code_index) {
+                                                                Ok(result) => code_index = result,
+                                                                Err(err) => {
+                                                                        eprintln!("could not find the end of loop, {}", err);
+                                                                }
+                                                        }
+                                                        code_index += 1;
+                                                        continue;
+                                                }
+                                        }
+
                                         loop_layer += 1;
                                         match loop_hash_map.add_entry(code_index, match self.discover_end_of_loop(code_index) {
                                                 Ok(val) => val,
