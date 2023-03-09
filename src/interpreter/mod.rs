@@ -183,7 +183,7 @@ impl BFInterpretor for Interpretor {
                         }
                 }
 
-                if loop_layer == 0 {
+                if loop_layer != 0 {
                         // this should never happend lol
                         return Err("Final loop_layer was not 0, there is some unclosed loops");
                 }

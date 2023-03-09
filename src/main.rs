@@ -9,7 +9,8 @@ mod pointers;
 
 mod data {
         // pub const ENTRY_CODE: &'static str = "-[--->+<]>.--[----->+<]>.>-[--->+<]>.";
-        pub const ENTRY_CODE: &'static str = ",.>,.>,.>,.>,.>,.";
+        // pub const ENTRY_CODE: &'static str = "+#+#+#.>.>-#.";
+        pub const ENTRY_CODE: &'static str = ",.>,.>,.>,.";
         pub const USER_INPUTS: &'static str = "abc";
 }
 

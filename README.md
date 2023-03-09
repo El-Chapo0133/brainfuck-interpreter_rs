@@ -1,6 +1,8 @@
 # brainfuck-interpreter_rs
 This is a simple BrainFuck interpreter<br>
 It uses a code entry and user_inputs and returns a 'Result<Vec<u8>, &'static str>'
+<br><br>
+No deps needed, this was made from scratch
 
 ## BrainFuck codes
 | code | Commands                                                  |
