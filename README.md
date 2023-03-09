@@ -16,7 +16,11 @@ It uses a code entry and user_inputs and returns a 'Result<Vec<u8>, &'static str
 |      | Any other characters are ignored                          |
 
 ## Debug code
-I did not coded that because i do not know when it means, so yea lol
+For now, you always are in debug mode<br>
+It simply print a line with :
+> index in code<br>
+> pointer index<br>
+> value at pointer<br>
 
 # Sources
 you can check some BrainFuck codes here

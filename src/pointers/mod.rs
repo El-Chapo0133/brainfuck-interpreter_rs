@@ -12,6 +12,7 @@ pub trait PointersIndex {
         fn read_value(&self) -> Option<u8>;
         
         fn get_values_cloned(&self) -> Vec<u8>;
+        fn get_index_cloned(&self) -> usize;
 
         fn adjust_values_forward(&mut self) -> Result<(), &'static str>;
         fn adjust_values_backward(&mut self) -> Result<(), &'static str>;
@@ -31,6 +32,9 @@ impl PointersIndex for Pointers {
         }
         fn get_values_cloned(&self) -> Vec<u8> {
                 self.values.clone()
+        }
+        fn get_index_cloned(&self) -> usize {
+                self.index.clone()
         }
 
         fn move_index_forward(&mut self) -> Result<(), &'static str> {

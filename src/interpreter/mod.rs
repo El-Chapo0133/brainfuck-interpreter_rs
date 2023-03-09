@@ -12,6 +12,7 @@ mod commands {
         pub const END_LOOP:             &'static u8 = &93; // ]
         pub const READ_VALUE:           &'static u8 = &44; // ,
         pub const PRINT_VALUE:          &'static u8 = &46; // .
+        pub const DEBUG:                &'static u8 = &35; // #
 }
 
 pub trait BFInterpretor {
@@ -166,6 +167,15 @@ impl BFInterpretor for Interpretor {
                                         continue;
 
                                 },
+                                commands::DEBUG => {
+                                        match pointers.read_value() {
+                                                Some(val) => println!("position within code: {}, pointer index: {}, value at pointer: {}", code_index, pointers.get_index_cloned(), val),
+                                                None => println!("position within code: {}, pointer index: {}, value at pointer: -1", code_index, pointers.get_index_cloned())
+                                        }
+
+                                        code_index += 1;
+                                        continue;
+                                }
                                 _ => {
                                         code_index += 1;
                                         continue
